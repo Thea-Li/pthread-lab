@@ -1,0 +1,18 @@
+Baccarat has many variations, we’ll be using a version called Punto Banco. In this game, the player plays against the bank, and whomever has the highest valued hand wins. The croupier is a neutral third party who oversees the progress of the game.
+You will write a program that uses POSIX threads to create two child threads that will play rounds of Baccarat (one for the player and one for the bank). Your main routine will act as the croupier and determine the winner of each round. To play: Initially, each player draws two cards. The value of the hand is determined by the rightmost digit of the sum of the cards. For example, a hand with a 2 and 3 is worth 5, but 5 and 8 is worth 3 – the rightmost digit of 13.
+Therefore, the highest possible hand is 9. The 10 card and all face cards are worth no points.
+Once the initial two cards are drawn, if either the player or bank have drawn 8 or 9, they win the round. If both draw
+winning hands the round is a tie.
+If there is no winner from the initial two card draw, then the following rules are used to determine what happens
+next:
+Player:
+• If the player has an initial total of 0-5, they draw a third card. • If the player has an initial total of 6 or 7, they stand.
+Banker:
+• If the banker total is 2 or less, the banker draws a card.
+• If the banker total is 3, then the banker draws a third card unless the player’s third card was an eight. • If the banker total is 4, then the banker draws a third card if the player’s third card was 2-7.
+• If the banker total is 5, then the banker draws a third card if the player’s third card was 4-7.
+• If the banker total is 6, then the banker draws a third card if the player’s third card was 6 or 7.
+• If the banker total is 7, the banker stands.
+Your player/bank threads should wait for a ”signal” from the croupier thread. At this point, each player thread will draw cards using a random number and place their cards in a shared memory location. Then you will use synchronization (condition variables) to play each round according to the rules of the game. No third card should be drawn until the croupier declares no winner from the first draw. In most cases, the bank must wait until the player draws a third card (or stands) before deciding to draw its own card.
+The main issue with using pthreads/shared memory over a fork/message passing solution is with the need for syn- chronization between the different threads. You should use a pthread condition variable to synchronize the parent and children threads. The output from this lab should be identical to the following sample output. You should also ensure that at the completion of the game, both child threads re-join the parent thread before exiting.
+The parent process should for each round, output each player’s throw and the result of the round. After the tourna- ment is over, the croupier should output the aggregate results. Neither player thread should never print anything. The croupier should be the only thread producing output.
